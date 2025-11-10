@@ -3,62 +3,191 @@
 ## System Architecture / 系统架构
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     Main Application                          │
-│                        (main.py)                              │
-└───────────────┬─────────────────────────────┬─────────────────┘
-                │                             │
-                ▼                             ▼
-┌───────────────────────────┐   ┌────────────────────────────┐
-│    Hand Tracker Module    │   │    Snake Game Module       │
-│    (hand_tracker.py)      │   │    (snake_game.py)         │
-│                           │   │                            │
-│  - MediaPipe Integration  │   │  - Game Logic             │
-│  - Hand Detection         │   │  - Collision Detection    │
-│  - Finger Position        │   │  - Score Management       │
-└───────────┬───────────────┘   └────────────┬───────────────┘
-            │                                │
-            ▼                                ▼
-    ┌───────────────┐              ┌────────────────┐
-    │   MediaPipe   │              │  Game State    │
-    │  Hand Solver  │              │  (Snake, Food) │
-    └───────────────┘              └────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                     Game Launcher                                │
+│                   (game_launcher.py)                             │
+│  - Multiple game selection                                       │
+│  - Game switching                                                │
+└───────────────┬──────────────────────────┬──────────────────────┘
+                │                          │
+                ▼                          ▼
+┌───────────────────────────┐  ┌────────────────────────────────┐
+│   Main Application        │  │    Additional Games            │
+│      (main.py)            │  │  - Fruit Slicer Game           │
+│  - Snake Game Enhanced    │  │  - Flappy Hand Game            │
+│  - Menu Integration       │  │                                │
+└───────┬──────┬──────┬─────┘  └────────────────────────────────┘
+        │      │      │
+        ▼      ▼      ▼
+┌─────────┐ ┌──────────┐ ┌──────────────┐
+│ Hand    │ │ Gesture  │ │  Snake Game  │
+│ Tracker │ │Recognizer│ │   Module     │
+└────┬────┘ └────┬─────┘ └───────┬──────┘
+     │           │               │
+     ▼           ▼               ▼
+┌─────────────────────────────────────────┐
+│         Supporting Modules              │
+│  - GameConfig: Settings & High Scores   │
+│  - SoundManager: Audio Effects          │
+│  - GameMenu: UI Menu System             │
+└─────────────────────────────────────────┘
 ```
 
 ## Module Descriptions / 模块说明
 
-### 1. main.py - Main Application / 主应用程序
+### 1. game_launcher.py - Game Launcher / 游戏启动器
 
 **Purpose / 目的:**
-- Integrates all components / 整合所有组件
-- Manages the main game loop / 管理主游戏循环
-- Handles video capture and display / 处理视频捕获和显示
+- Manage multiple games / 管理多个游戏
+- Provide game selection interface / 提供游戏选择界面
+- Handle game switching / 处理游戏切换
 
 **Key Classes / 关键类:**
-- `SnakeVideoGame`: Main game controller
+- `GameLauncher`: Main launcher controller
 
 **Key Methods / 关键方法:**
-- `__init__()`: Initialize webcam, hand tracker, and game
-- `run()`: Main game loop
-- `draw_grid()`: Draw game grid overlay
-- `draw_snake()`: Render snake on video
-- `draw_food()`: Render food on video
-- `draw_ui()`: Display score and instructions
-- `cleanup()`: Release resources
+- `show_game_selection()`: Display game menu
+- `start_game()`: Initialize selected game
+- `run_snake_game()`, `run_fruit_slicer()`, `run_flappy_hand()`: Game-specific logic
 
-**Flow / 流程:**
-1. Initialize webcam (1280x720)
-2. Create hand tracker and game instances
-3. Enter main loop:
-   - Capture frame from webcam
-   - Flip frame for mirror effect
-   - Detect hand and get finger position
-   - Update game state based on finger position
-   - Draw all game elements
-   - Display frame
-   - Handle keyboard input (Q to quit, R to restart)
+### 2. main.py - Main Snake Game Application / 主贪吃蛇应用程序
 
-### 2. hand_tracker.py - Hand Tracking Module / 手部追踪模块
+**Purpose / 目的:**
+- Enhanced snake game with all features / 增强版贪吃蛇游戏
+- Integrate config, sound, menu systems / 整合配置、音效、菜单系统
+- Manage the main game loop / 管理主游戏循环
+
+**Key Classes / 关键类:**
+- `SnakeVideoGame`: Enhanced game controller
+
+**Key Methods / 关键方法:**
+- `__init__()`: Initialize with config, sound, menu
+- `run()`: Main game loop with menu support
+- `draw_ui()`: Enhanced UI with high scores and difficulty
+- All previous drawing methods
+
+**New Features / 新功能:**
+- Difficulty level support
+- High score tracking
+- Sound effects
+- Pause functionality
+- Menu system integration
+- Gesture-based menu control
+
+### 3. game_config.py - Configuration Module / 配置模块
+
+**Purpose / 目的:**
+- Manage game settings / 管理游戏设置
+- Handle difficulty levels / 处理难度级别
+- Persist high scores / 持久化最高分
+
+**Key Classes / 关键类:**
+- `Difficulty`: Enum for difficulty levels
+- `GameConfig`: Configuration manager
+
+**Key Methods / 关键方法:**
+- `load_config()`, `save_config()`: Persistence
+- `set_difficulty()`: Change difficulty
+- `update_high_score()`: Track high scores
+- `toggle_sound()`: Sound on/off
+
+**Configuration / 配置:**
+- Easy: slow speed, 1x multiplier
+- Medium: normal speed, 2x multiplier
+- Hard: fast speed, 3x multiplier
+
+### 4. sound_manager.py - Sound Manager / 音效管理器
+
+**Purpose / 目的:**
+- Play game sound effects / 播放游戏音效
+- Cross-platform audio support / 跨平台音频支持
+
+**Key Classes / 关键类:**
+- `SoundManager`: Audio controller
+
+**Key Methods / 关键方法:**
+- `play_eat_sound()`: Food collection sound
+- `play_game_over_sound()`: Game over sequence
+- `play_level_up_sound()`: Milestone sound
+- `play_menu_sound()`: Menu navigation sound
+
+**Platform Support / 平台支持:**
+- Windows: winsound
+- macOS: afplay
+- Linux: system beep
+
+### 5. gesture_recognizer.py - Gesture Recognition / 手势识别
+
+**Purpose / 目的:**
+- Recognize various hand gestures / 识别多种手势
+- Enable gesture-based controls / 启用手势控制
+
+**Key Classes / 关键类:**
+- `GestureRecognizer`: Gesture detection engine
+
+**Key Methods / 关键方法:**
+- `recognize_gesture()`: Main recognition method
+- `_detect_gesture()`: Internal gesture detection
+- `_count_fingers_up()`: Finger state detection
+- `_is_pinch()`, `_is_thumbs_up()`, etc.: Specific gestures
+
+**Supported Gestures / 支持的手势:**
+- Point (index finger)
+- Peace (index + middle)
+- Open palm (all fingers)
+- Fist (no fingers)
+- Pinch (thumb + index close)
+- Thumbs up/down
+
+### 6. game_menu.py - Menu System / 菜单系统
+
+**Purpose / 目的:**
+- Provide in-game menu UI / 提供游戏内菜单UI
+- Handle menu navigation / 处理菜单导航
+
+**Key Classes / 关键类:**
+- `GameMenu`: Menu controller
+
+**Key Methods / 关键方法:**
+- `show_main_menu()`: Main menu display
+- `show_difficulty_menu()`: Difficulty selection
+- `show_high_scores()`: High score display
+- `navigate_up()`, `navigate_down()`: Navigation
+- `select()`: Menu item selection
+
+### 7. fruit_slicer_game.py - Fruit Slicer Game / 水果切切乐
+
+**Purpose / 目的:**
+- Fruit Ninja-style game / 水果忍者风格游戏
+- Swipe gesture interaction / 滑动手势交互
+
+**Key Classes / 关键类:**
+- `Fruit`: Fruit object
+- `FruitSlicerGame`: Game logic
+
+**Game Mechanics / 游戏机制:**
+- Fruits spawn from bottom
+- Swipe to slice fruits
+- Don't let fruits fall
+- 3 lives system
+
+### 8. flappy_hand_game.py - Flappy Hand Game / 飞扬之手
+
+**Purpose / 目的:**
+- Flappy Bird-style game / Flappy Bird 风格游戏
+- Hand height control / 手部高度控制
+
+**Key Classes / 关键类:**
+- `Pipe`: Obstacle pipe
+- `FlappyHandGame`: Game logic
+
+**Game Mechanics / 游戏机制:**
+- Control bird with hand height
+- Avoid pipes
+- Smooth movement
+- Score for passing pipes
+
+### 9. hand_tracker.py - Hand Tracking Module / 手部追踪模块
 
 **Purpose / 目的:**
 - Detect and track hand landmarks / 检测和追踪手部关键点
@@ -85,7 +214,7 @@ Other finger tips: 4 (thumb), 12 (middle), 16 (ring), 20 (pinky)
 - `min_detection_confidence`: 0.7
 - `min_tracking_confidence`: 0.5
 
-### 3. snake_game.py - Game Logic Module / 游戏逻辑模块
+### 10. snake_game.py - Game Logic Module / 游戏逻辑模块
 
 **Purpose / 目的:**
 - Implement classic Snake game mechanics / 实现经典贪吃蛇游戏机制
@@ -95,13 +224,13 @@ Other finger tips: 4 (thumb), 12 (middle), 16 (ring), 20 (pinky)
 - `SnakeGame`: Core game logic
 
 **Key Methods / 关键方法:**
-- `__init__()`: Initialize game grid and state
+- `__init__()`: Initialize game grid and state with speed control
 - `generate_food()`: Random food placement
-- `update_snake_position()`: Move snake based on finger position
+- `update_snake_position()`: Move snake based on finger position with speed delay
+- `toggle_pause()`: Pause/resume game
+- `set_speed_delay()`: Adjust game speed
 - `reset()`: Reset game to initial state
-- `get_snake_head()`: Return head position
-- `get_snake_body()`: Return body segments
-- `get_food_position()`: Return food position
+- `get_snake_head()`, `get_snake_body()`, `get_food_position()`: Getters
 - `is_game_over()`: Check game over condition
 
 **Game Parameters / 游戏参数:**
@@ -109,6 +238,13 @@ Other finger tips: 4 (thumb), 12 (middle), 16 (ring), 20 (pinky)
 - Cell size: 30 pixels
 - Starting position: Center of grid
 - Food score: +10 points per food item
+- Speed delay: Varies by difficulty (3-15 frames)
+
+**New Features / 新功能:**
+- Pause functionality
+- Adjustable speed
+- Frame-based movement control
+- Returns ate_food status
 
 **Game Rules / 游戏规则:**
 1. Snake follows index finger position
@@ -116,7 +252,7 @@ Other finger tips: 4 (thumb), 12 (middle), 16 (ring), 20 (pinky)
 3. Game over if snake bites itself (after length > 4)
 4. Food randomly spawns after being eaten
 
-### 4. start.py - Quick Start Script / 快速启动脚本
+### 11. start.py - Quick Start Script / 快速启动脚本
 
 **Purpose / 目的:**
 - Perform pre-flight checks / 执行启动前检查
