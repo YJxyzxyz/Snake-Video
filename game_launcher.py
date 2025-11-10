@@ -10,6 +10,8 @@ from gesture_recognizer import GestureRecognizer
 from snake_game import SnakeGame
 from fruit_slicer_game import FruitSlicerGame
 from flappy_hand_game import FlappyHandGame
+from rock_paper_scissors_game import RockPaperScissorsGame
+from air_drawing_game import AirDrawingGame
 from game_config import GameConfig, Difficulty
 from sound_manager import SoundManager
 from game_menu import GameMenu
@@ -22,6 +24,8 @@ class GameLauncher:
         'snake': 'Snake Game',
         'fruit_slicer': 'Fruit Slicer',
         'flappy_hand': 'Flappy Hand',
+        'rps': 'Rock Paper Scissors',
+        'air_drawing': 'Air Drawing',
     }
     
     def __init__(self):
@@ -107,6 +111,8 @@ class GameLauncher:
                 'snake': 'Classic snake game - Point finger to move',
                 'fruit_slicer': 'Slice falling fruits - Swipe with finger',
                 'flappy_hand': 'Avoid pipes - Move hand up/down',
+                'rps': 'Play against computer - Show hand gestures',
+                'air_drawing': 'Draw in the air - Use your finger as brush',
             }
             desc = descriptions.get(game_key, '')
             cv2.putText(frame, desc, (self.width // 4 + 40, y_start + i * 80 + 30),
@@ -114,7 +120,7 @@ class GameLauncher:
         
         # Instructions
         instructions = [
-            "Use NUMBER keys (1-3) to select a game",
+            "Use NUMBER keys (1-5) to select a game",
             "Press ENTER to start selected game",
             "Press ESC to show this menu during gameplay",
             "Press Q to quit"
@@ -146,6 +152,10 @@ class GameLauncher:
             self.game_instance = FruitSlicerGame(self.width, self.height)
         elif game_key == 'flappy_hand':
             self.game_instance = FlappyHandGame(self.width, self.height)
+        elif game_key == 'rps':
+            self.game_instance = RockPaperScissorsGame(self.width, self.height)
+        elif game_key == 'air_drawing':
+            self.game_instance = AirDrawingGame(self.width, self.height)
     
     def run_snake_game(self, frame, results):
         """Run snake game logic"""
@@ -303,6 +313,42 @@ class GameLauncher:
         
         return frame
     
+    def run_rock_paper_scissors(self, frame, results):
+        """Run rock paper scissors game logic"""
+        # Recognize gesture
+        if results.multi_hand_landmarks:
+            gesture = self.gesture_recognizer.recognize_gesture(results.multi_hand_landmarks[0])
+            if gesture:
+                self.game_instance.detect_gesture(gesture)
+        
+        # Update game
+        self.game_instance.update()
+        
+        # Draw game
+        frame = self.game_instance.draw(frame)
+        
+        return frame
+    
+    def run_air_drawing(self, frame, results):
+        """Run air drawing game logic"""
+        # Get finger position
+        finger_pos = self.hand_tracker.get_index_finger_position(frame, results)
+        
+        # Check if drawing (all fingers extended means not drawing)
+        is_drawing = False
+        if results.multi_hand_landmarks:
+            gesture = self.gesture_recognizer.recognize_gesture(results.multi_hand_landmarks[0])
+            # Draw only when pointing (index finger up)
+            is_drawing = (gesture == 'point')
+        
+        # Update drawing
+        self.game_instance.update(finger_pos, is_drawing)
+        
+        # Draw UI
+        frame = self.game_instance.draw_ui(frame)
+        
+        return frame
+    
     def run(self):
         """Main game loop"""
         print("Starting Gesture Game Collection...")
@@ -335,6 +381,10 @@ class GameLauncher:
                     frame = self.run_fruit_slicer(frame, results)
                 elif self.current_game == 'flappy_hand':
                     frame = self.run_flappy_hand(frame, results)
+                elif self.current_game == 'rps':
+                    frame = self.run_rock_paper_scissors(frame, results)
+                elif self.current_game == 'air_drawing':
+                    frame = self.run_air_drawing(frame, results)
             
             # Display the frame
             cv2.imshow("Gesture Game Collection", frame)
@@ -366,12 +416,35 @@ class GameLauncher:
                     self.start_game(game_keys[1])
                 elif key == ord('3') and len(game_keys) > 2:
                     self.start_game(game_keys[2])
+                elif key == ord('4') and len(game_keys) > 3:
+                    self.start_game(game_keys[3])
+                elif key == ord('5') and len(game_keys) > 4:
+                    self.start_game(game_keys[4])
                 elif key == 13:  # Enter key
                     self.start_game(game_keys[self.selected_game_index])
                 elif key == 82 or key == 0:  # Up arrow
                     self.selected_game_index = (self.selected_game_index - 1) % len(game_keys)
                 elif key == 84 or key == 1:  # Down arrow
                     self.selected_game_index = (self.selected_game_index + 1) % len(game_keys)
+            
+            # Game-specific controls
+            if not self.show_game_select and self.current_game == 'air_drawing':
+                if key == ord('c') or key == ord('C'):
+                    self.game_instance.next_color()
+                elif key == ord('t') or key == ord('T'):
+                    self.game_instance.toggle_tool()
+                elif key == ord('=') or key == ord('+'):
+                    self.game_instance.increase_brush_size()
+                elif key == ord('-') or key == ord('_'):
+                    self.game_instance.decrease_brush_size()
+                elif key == ord('u') or key == ord('U'):
+                    self.game_instance.undo()
+                elif key == ord('x') or key == ord('X'):
+                    self.game_instance.clear_canvas()
+                elif key == ord('h') or key == ord('H'):
+                    self.game_instance.toggle_help()
+                elif key == ord('p') or key == ord('P'):
+                    self.game_instance.toggle_palette()
         
         # Cleanup
         self.cleanup()
