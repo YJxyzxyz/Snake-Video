@@ -81,10 +81,10 @@ class GameLauncher:
         
         # Title
         title = "GESTURE GAME COLLECTION"
-        title_size = cv2.getTextSize(title, cv2.FONT_HERSHEY_BOLD, 2, 3)[0]
+        title_size = cv2.getTextSize(title, cv2.FONT_HERSHEY_DUPLEX, 2, 3)[0]
         title_x = (self.width - title_size[0]) // 2
         cv2.putText(frame, title, (title_x, 100),
-                   cv2.FONT_HERSHEY_BOLD, 2, (0, 255, 255), 3)
+                    cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 255), 3)
         
         # Subtitle
         subtitle = "Select a game to play"
@@ -260,9 +260,9 @@ class GameLauncher:
             cv2.rectangle(overlay, (self.width//4, self.height//3),
                          (3*self.width//4, 2*self.height//3), (0, 0, 0), -1)
             cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
-            
-            cv2.putText(frame, "GAME OVER!", (self.width//4 + 100, self.height//2 - 20),
-                       cv2.FONT_HERSHEY_BOLD, 1.5, (0, 0, 255), 3)
+
+            cv2.putText(frame, "GAME OVER!", (self.width // 4 + 100, self.height // 2 - 20),
+                        cv2.FONT_HERSHEY_DUPLEX, 1.5, (0, 0, 255), 3)
             cv2.putText(frame, f"Score: {score}", (self.width//4 + 150, self.height//2 + 30),
                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
     

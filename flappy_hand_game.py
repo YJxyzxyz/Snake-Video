@@ -195,7 +195,7 @@ class FlappyHandGame:
         
         # Draw score
         cv2.putText(frame, f"Score: {self.score}", (10, 50),
-                   cv2.FONT_HERSHEY_BOLD, 1.5, (255, 255, 255), 3)
+                   cv2.FONT_HERSHEY_DUPLEX, 1.5, (255, 255, 255), 3)
         
         # Draw instructions
         if not self.game_over:
@@ -214,7 +214,7 @@ class FlappyHandGame:
             score_text = f"Final Score: {self.score}"
             
             cv2.putText(frame, game_over_text, (self.width//4 + 80, self.height//2 - 30),
-                       cv2.FONT_HERSHEY_BOLD, 1.5, (0, 0, 255), 3)
+                       cv2.FONT_HERSHEY_DUPLEX, 1.5, (0, 0, 255), 3)
             cv2.putText(frame, score_text, (self.width//4 + 120, self.height//2 + 20),
                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255), 2)
         

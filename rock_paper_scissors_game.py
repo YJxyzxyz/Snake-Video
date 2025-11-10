@@ -127,10 +127,10 @@ class RockPaperScissorsGame:
         
         # Draw title
         title = "ROCK PAPER SCISSORS"
-        title_size = cv2.getTextSize(title, cv2.FONT_HERSHEY_BOLD, 1.5, 3)[0]
+        title_size = cv2.getTextSize(title, cv2.FONT_HERSHEY_DUPLEX, 1.5, 3)[0]
         title_x = (self.width - title_size[0]) // 2
         cv2.putText(frame, title, (title_x, 60),
-                   cv2.FONT_HERSHEY_BOLD, 1.5, (255, 255, 255), 3)
+                   cv2.FONT_HERSHEY_DUPLEX, 1.5, (255, 255, 255), 3)
         
         # Draw scores
         score_text = f"You: {self.player_score}  |  Computer: {self.computer_score}"
@@ -166,10 +166,10 @@ class RockPaperScissorsGame:
     def _draw_waiting_state(self, frame):
         """Draw waiting for player gesture"""
         text = "Show your gesture!"
-        text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_BOLD, 1.5, 3)[0]
+        text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_DUPLEX, 1.5, 3)[0]
         text_x = (self.width - text_size[0]) // 2
         cv2.putText(frame, text, (text_x, self.height // 2),
-                   cv2.FONT_HERSHEY_BOLD, 1.5, (0, 255, 0), 3)
+                   cv2.FONT_HERSHEY_DUPLEX, 1.5, (0, 255, 0), 3)
         
         # Draw gesture icons
         gestures_text = "✊ Rock    ✋ Paper    ✌️ Scissors"
@@ -182,30 +182,30 @@ class RockPaperScissorsGame:
         """Draw countdown"""
         if self.countdown > 0:
             countdown_text = str(self.countdown)
-            text_size = cv2.getTextSize(countdown_text, cv2.FONT_HERSHEY_BOLD, 5, 10)[0]
+            text_size = cv2.getTextSize(countdown_text, cv2.FONT_HERSHEY_DUPLEX, 5, 10)[0]
             text_x = (self.width - text_size[0]) // 2
             text_y = (self.height + text_size[1]) // 2
             cv2.putText(frame, countdown_text, (text_x, text_y),
-                       cv2.FONT_HERSHEY_BOLD, 5, (255, 255, 0), 10)
+                       cv2.FONT_HERSHEY_DUPLEX, 5, (255, 255, 0), 10)
         else:
             shoot_text = "SHOOT!"
-            text_size = cv2.getTextSize(shoot_text, cv2.FONT_HERSHEY_BOLD, 3, 6)[0]
+            text_size = cv2.getTextSize(shoot_text, cv2.FONT_HERSHEY_DUPLEX, 3, 6)[0]
             text_x = (self.width - text_size[0]) // 2
             text_y = (self.height + text_size[1]) // 2
             cv2.putText(frame, shoot_text, (text_x, text_y),
-                       cv2.FONT_HERSHEY_BOLD, 3, (0, 255, 255), 6)
+                       cv2.FONT_HERSHEY_DUPLEX, 3, (0, 255, 255), 6)
     
     def _draw_result(self, frame):
         """Draw round result"""
         # Draw player choice
         player_text = f"You: {self.GESTURES[self.player_choice]}"
         cv2.putText(frame, player_text, (100, self.height // 2 - 50),
-                   cv2.FONT_HERSHEY_BOLD, 1.5, (255, 255, 255), 3)
+                   cv2.FONT_HERSHEY_DUPLEX, 1.5, (255, 255, 255), 3)
         
         # Draw computer choice
         computer_text = f"Computer: {self.GESTURES[self.computer_choice]}"
         cv2.putText(frame, computer_text, (self.width - 500, self.height // 2 - 50),
-                   cv2.FONT_HERSHEY_BOLD, 1.5, (255, 255, 255), 3)
+                   cv2.FONT_HERSHEY_DUPLEX, 1.5, (255, 255, 255), 3)
         
         # Draw result
         if self.result == 'win':
@@ -218,10 +218,10 @@ class RockPaperScissorsGame:
             result_text = "TIE!"
             color = (255, 255, 0)
         
-        result_size = cv2.getTextSize(result_text, cv2.FONT_HERSHEY_BOLD, 2.5, 5)[0]
+        result_size = cv2.getTextSize(result_text, cv2.FONT_HERSHEY_DUPLEX, 2.5, 5)[0]
         result_x = (self.width - result_size[0]) // 2
         cv2.putText(frame, result_text, (result_x, self.height // 2 + 50),
-                   cv2.FONT_HERSHEY_BOLD, 2.5, color, 5)
+                   cv2.FONT_HERSHEY_DUPLEX, 2.5, color, 5)
     
     def reset(self):
         """Reset scores and game state"""
