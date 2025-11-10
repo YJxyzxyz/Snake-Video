@@ -18,14 +18,6 @@ A real-time Snake game controlled by hand gestures detected through your webcam 
 - 👆 **食指控制**: 使用食指作为蛇头位置
 - 🎯 **简单直观**: 无需键盘，仅需手势即可游玩
 
----
-
-- 🎮 **Real-time gesture recognition**: Hand tracking using MediaPipe
-- 🐍 **Classic Snake game**: Traditional Snake gameplay
-- 📹 **Webcam video stream**: Live camera feed display
-- 👆 **Index finger control**: Use your index finger as the snake head
-- 🎯 **Simple and intuitive**: No keyboard needed, just gestures
-
 ## 工作原理 (How It Works)
 
 1. **摄像头捕获**: 程序从摄像头获取实时视频流
@@ -33,14 +25,6 @@ A real-time Snake game controlled by hand gestures detected through your webcam 
 3. **食指定位**: 提取食指尖端位置作为控制点
 4. **游戏控制**: 蛇头跟随食指移动
 5. **游戏逻辑**: 标准贪吃蛇规则（吃食物、增长、碰撞检测）
-
----
-
-1. **Webcam capture**: Captures real-time video stream from webcam
-2. **Hand detection**: MediaPipe detects and tracks hand landmarks
-3. **Index finger positioning**: Extracts index finger tip position as control point
-4. **Game control**: Snake head follows the index finger
-5. **Game logic**: Standard Snake rules (eat food, grow, collision detection)
 
 ## 系统要求 (Requirements)
 
@@ -114,37 +98,6 @@ python main.py
 5. 收集红色食物得分并增长
 6. 避免咬到自己的身体
 
----
-
-1. Ensure good lighting for better hand detection
-2. Keep your hand within the camera view
-3. Extend your index finger, other fingers can be in a fist
-4. The snake head follows your index finger tip
-5. Collect red food to score and grow
-6. Avoid biting your own body
-
-## 项目结构 (Project Structure)
-
-```
-Snake-Video/
-│
-├── main.py              # 主程序入口 (Main application entry)
-├── start.py             # 快速启动脚本 (Quick start script with checks)
-├── hand_tracker.py      # 手部追踪模块 (Hand tracking module)
-├── snake_game.py        # 贪吃蛇游戏逻辑 (Snake game logic)
-├── requirements.txt     # 依赖列表 (Dependencies)
-├── .gitignore          # Git 忽略文件 (Git ignore file)
-├── README.md           # 项目说明 (Project documentation)
-└── LICENSE             # 许可证 (License)
-```
-
-## 技术栈 (Technology Stack)
-
-- **Python**: 主要编程语言 (Primary programming language)
-- **OpenCV**: 视频捕获和图像处理 (Video capture and image processing)
-- **MediaPipe**: 手部检测和追踪 (Hand detection and tracking)
-- **NumPy**: 数值计算 (Numerical computing)
-
 ## 常见问题 (Troubleshooting)
 
 ### 摄像头无法打开 (Camera not opening)
@@ -200,24 +153,6 @@ Issues and pull requests are welcome!
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 作者 (Author)
-
-Xiao Yizhe
-
-## 致谢 (Acknowledgments)
-
-- [MediaPipe](https://mediapipe.dev/) - Google 的手部追踪解决方案
-- [OpenCV](https://opencv.org/) - 计算机视觉库
-- 经典贪吃蛇游戏启发
-
----
-
-- [MediaPipe](https://mediapipe.dev/) - Google's hand tracking solution
-- [OpenCV](https://opencv.org/) - Computer vision library
-- Inspired by the classic Snake game
-
 ## 演示 (Demo)
 
 运行程序后，你将看到：
@@ -226,15 +161,6 @@ Xiao Yizhe
 3. 游戏网格叠加显示
 4. 绿色的蛇和红色的食物
 5. 实时得分显示
-
----
-
-After running the program, you will see:
-1. Real-time webcam video stream
-2. Hand landmark annotations
-3. Game grid overlay
-4. Green snake and red food
-5. Real-time score display
 
 ## 未来改进 (Future Improvements)
 
