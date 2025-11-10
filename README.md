@@ -77,7 +77,17 @@ pip install -r requirements.txt
 
 ## 使用方法 (Usage)
 
-### 启动游戏 (Start the game)
+### 快速启动（推荐）(Quick Start - Recommended)
+
+```bash
+python start.py
+```
+
+这个脚本会自动检查依赖和摄像头，然后启动游戏。
+
+This script automatically checks dependencies and camera, then starts the game.
+
+### 直接启动 (Direct Start)
 
 ```bash
 python main.py
@@ -119,9 +129,11 @@ python main.py
 Snake-Video/
 │
 ├── main.py              # 主程序入口 (Main application entry)
+├── start.py             # 快速启动脚本 (Quick start script with checks)
 ├── hand_tracker.py      # 手部追踪模块 (Hand tracking module)
 ├── snake_game.py        # 贪吃蛇游戏逻辑 (Snake game logic)
 ├── requirements.txt     # 依赖列表 (Dependencies)
+├── .gitignore          # Git 忽略文件 (Git ignore file)
 ├── README.md           # 项目说明 (Project documentation)
 └── LICENSE             # 许可证 (License)
 ```
